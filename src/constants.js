@@ -1,18 +1,18 @@
 import { SONG_FUNCTION_OPTIONS as BRANCHED_SONG_FUNCTION_OPTIONS } from "./branching.js?v=20260321c";
 
 export const SCREEN_PROMPTS = {
-  songFunction: "What is the purpose of this song today?",
+  songFunction: "What should this song do today?",
   branchFocus: "What part of that feels most important?",
-  emotionalSignal: "Which core emotions are most present?",
+  emotionalSignal: "What core emotions are most present?",
   directedListener: "Who or what is this song for?",
   emotionalDifferentiation: "Which feelings are part of it?",
-  coreRealization: "What truth or feeling should the song hold?",
+  coreRealization: "What truth should the song carry?",
   songPerspective: "How should the song speak?",
   imageryCategory: "What kind of image fits best?",
-  musicalTone: "How should the music hold this?",
-  genre: "What style feels like the right home for it?",
-  avoidTopics: "Anything this song should avoid? (optional)",
-  reflectionCheck: "Does this feel ready enough to turn into a draft?",
+  musicalTone: "How should the music feel?",
+  genre: "What genre fits best?",
+  avoidTopics: "Anything to avoid? (optional)",
+  reflectionCheck: "Does this feel ready to build?",
 };
 
 export const SONG_FUNCTION_OPTIONS = BRANCHED_SONG_FUNCTION_OPTIONS;
@@ -72,15 +72,15 @@ export const MUSICAL_TONE_OPTIONS = [
 ];
 
 export const GENRE_OPTIONS = [
-  "acoustic singer-songwriter",
-  "indie folk",
+  "singer-songwriter",
   "piano ballad",
+  "folk",
+  "soul",
+  "soft rock",
+  "country",
   "cinematic ambient",
-  "pop emotional",
-  "country storytelling",
-  "alternative",
-  "indie rock",
-  "lo-fi indie",
+  "dream pop",
+  "R&B",
 ];
 
 export const REFLECTION_SUMMARY_FIELDS = [
@@ -94,7 +94,7 @@ export const REFLECTION_SUMMARY_FIELDS = [
 ];
 
 export const REVIEW_ACTIONS = [
-  { id: "generate", label: "build session outputs" },
+  { id: "generate", label: "Generate prompts" },
   { id: "adjust_emotions", label: "adjust feelings" },
   { id: "adjust_imagery", label: "adjust imagery" },
   { id: "adjust_musical_tone", label: "adjust music" },

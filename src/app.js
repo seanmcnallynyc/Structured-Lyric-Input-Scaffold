@@ -444,12 +444,79 @@ function renderSingleQuestionField(question, labelText) {
   `;
 }
 
+function renderButtonGroupField(question, labelText) {
+  const answer = getAnswer(question.id) || "";
+  const options = getQuestionOptions(question);
+  const showOtherInput = answer === question.otherTrigger;
+
+  return `
+    <div class="field">
+      <span class="question-label">${escapeHtml(labelText)}${question.required ? " *" : ""}</span>
+      <div class="btn-group">
+        ${options
+          .map(
+            (option) =>
+              `<button
+                class="btn-option${answer === option ? " selected" : ""}"
+                data-question-id="${escapeHtml(question.id)}"
+                data-value="${escapeHtml(option)}"
+                type="button"
+              >${escapeHtml(option)}</button>`
+          )
+          .join("")}
+      </div>
+      ${
+        question.otherTrigger && showOtherInput
+          ? `<label class="field followup-field">
+              <span>${escapeHtml(question.otherLabel || "Add your own answer")}</span>
+              <input
+                class="question-other-input"
+                data-question-id="${escapeHtml(question.id)}"
+                type="text"
+                value="${escapeHtml(getOtherAnswer(question.id))}"
+                placeholder="${escapeHtml(question.otherPlaceholder || "")}"
+                maxlength="180"
+              >
+            </label>`
+          : ""
+      }
+    </div>
+  `;
+}
+
+function renderMultiButtonGroupField(question, labelText) {
+  const answers = Array.isArray(getAnswer(question.id)) ? getAnswer(question.id) : [];
+  const options = getQuestionOptions(question);
+
+  return `
+    <div class="field">
+      <span class="question-label">${escapeHtml(labelText)}${question.required ? " *" : ""}</span>
+      <div class="btn-group">
+        ${options
+          .map(
+            (option) =>
+              `<button
+                class="btn-option${answers.includes(option) ? " selected" : ""}"
+                data-question-id="${escapeHtml(question.id)}"
+                data-value="${escapeHtml(option)}"
+                data-max-select="${question.maxSelect || ""}"
+                data-multi="true"
+                type="button"
+              >${escapeHtml(option)}</button>`
+          )
+          .join("")}
+      </div>
+      ${question.maxSelect ? `<p class="hint">Pick up to ${question.maxSelect}.</p>` : ""}
+    </div>
+  `;
+}
+
 function renderSingleQuestion(question, index) {
   const label = `${index}. ${getQuestionLabel(question)}`;
 
   return `
     <div class="question-group" id="question-${escapeHtml(question.id)}">
-      ${renderSingleQuestionField(question, label)}
+      ${renderButtonGroupField(question, label)}
     </div>
   `;
 }
@@ -499,32 +566,11 @@ function renderMultiQuestion(question, index) {
     return renderStoryEmotionQuestion(question, index);
   }
 
-  const answers = Array.isArray(getAnswer(question.id)) ? getAnswer(question.id) : [];
-  const options = getQuestionOptions(question);
-  const label = getQuestionLabel(question);
+  const label = `${index}. ${getQuestionLabel(question)}`;
 
   return `
     <div class="question-group" id="question-${escapeHtml(question.id)}">
-      <p class="question-label">${index}. ${escapeHtml(label)}${question.required ? " *" : ""}</p>
-      <div class="choice-list">
-        ${options
-          .map((option) => {
-            const checked = answers.includes(option) ? "checked" : "";
-            return `<label class="choice">
-              <input
-                class="question-checkbox"
-                data-question-id="${question.id}"
-                data-max-select="${question.maxSelect || ""}"
-                type="checkbox"
-                value="${escapeHtml(option)}"
-                ${checked}
-              >
-              ${escapeHtml(option)}
-            </label>`;
-          })
-          .join("")}
-      </div>
-      ${question.maxSelect ? `<p class="hint">Pick up to ${question.maxSelect}.</p>` : ""}
+      ${renderMultiButtonGroupField(question, label)}
     </div>
   `;
 }
@@ -558,12 +604,12 @@ function renderCompoundQuestion(parentQuestion, childQuestion, index) {
   const childMarkup = childQuestion
     ? childQuestion.responseType === "text"
       ? renderTextQuestionField(childQuestion, getQuestionLabel(childQuestion))
-      : renderSingleQuestionField(childQuestion, getQuestionLabel(childQuestion))
+      : renderButtonGroupField(childQuestion, getQuestionLabel(childQuestion))
     : "";
 
   return `
     <div class="question-group question-compound" id="question-${escapeHtml(parentQuestion.id)}">
-      ${renderSingleQuestionField(parentQuestion, `${index}. ${getQuestionLabel(parentQuestion)}`)}
+      ${renderButtonGroupField(parentQuestion, `${index}. ${getQuestionLabel(parentQuestion)}`)}
       ${
         childMarkup
           ? `<div class="question-followup" id="question-${escapeHtml(childQuestion.id)}">
@@ -803,7 +849,7 @@ function renderApp() {
       <header class="app-header">
         <div>
           <h1>Music Therapy Session Prompt Guide</h1>
-          <p class="subtle">A structured session tool for helping a music therapist and client move from reflection to a Suno-ready song draft.</p>
+          <p class="subtle">Turn session reflection into a Suno-ready song draft.</p>
           <p class="support-note header-note">Use this to support reflection and songwriting in session. It does not provide therapy or clinical judgment, and nothing is stored by default.</p>
         </div>
         <div class="header-actions">
@@ -871,15 +917,16 @@ function scrollToQuestion(questionId) {
 }
 
 function attachEvents() {
-  document.querySelectorAll(".question-select").forEach((select) => {
-    select.addEventListener("change", (event) => {
-      const questionId = event.target.getAttribute("data-question-id");
+  // Single-select pill buttons
+  document.querySelectorAll(".btn-option:not([data-multi])").forEach((button) => {
+    button.addEventListener("click", () => {
+      const questionId = button.getAttribute("data-question-id");
+      const value = button.getAttribute("data-value");
       const question = getFlowQuestionById(questionId);
-      const nextValue = event.target.value;
 
-      setAnswer(questionId, nextValue);
+      setAnswer(questionId, value);
 
-      if (question?.otherTrigger && nextValue !== question.otherTrigger) {
+      if (question?.otherTrigger && value !== question.otherTrigger) {
         setOtherAnswer(questionId, "");
       }
 
@@ -891,6 +938,39 @@ function attachEvents() {
         setAnswer("imagery_detail", "");
         setOtherAnswer("imagery_detail", "");
       }
+
+      if (questionId === "emotional_signal") {
+        syncStoryEmotionSelections();
+      }
+
+      clearGeneratedOutput();
+      state.errors = [];
+      renderApp();
+    });
+  });
+
+  // Multi-select pill buttons
+  document.querySelectorAll(".btn-option[data-multi]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const questionId = button.getAttribute("data-question-id");
+      const value = button.getAttribute("data-value");
+      const maxSelect = Number(button.getAttribute("data-max-select") || 0);
+
+      const answers = Array.isArray(getAnswer(questionId)) ? [...getAnswer(questionId)] : [];
+      const idx = answers.indexOf(value);
+
+      if (idx >= 0) {
+        answers.splice(idx, 1);
+      } else {
+        if (maxSelect && answers.length >= maxSelect) {
+          state.errors = [`Pick up to ${maxSelect} options for this section.`];
+          renderApp();
+          return;
+        }
+        answers.push(value);
+      }
+
+      setAnswer(questionId, answers);
 
       if (questionId === "emotional_signal") {
         syncStoryEmotionSelections();
