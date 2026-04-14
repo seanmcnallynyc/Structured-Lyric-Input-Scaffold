@@ -848,13 +848,12 @@ function renderApp() {
     <main class="panel">
       <header class="app-header">
         <div>
-          <h1>Music Therapy Session Prompt Guide</h1>
+          <h1>Collaborative Songwriting Guide</h1>
           <p class="subtle">Turn session reflection into a Suno-ready song draft.</p>
           <p class="support-note header-note">Use this to support reflection and songwriting in session. It does not provide therapy or clinical judgment, and nothing is stored by default.</p>
         </div>
         <div class="header-actions">
           <button id="clear-session-btn">Start New Session</button>
-          <p class="subtle">Build ${BUILD_ID}</p>
         </div>
       </header>
       ${renderProgress()}
