@@ -1,4 +1,4 @@
-import { SONG_FUNCTION_OPTIONS as BRANCHED_SONG_FUNCTION_OPTIONS } from "./branching.js?v=20260321c";
+import { SONG_FUNCTION_OPTIONS as BRANCHED_SONG_FUNCTION_OPTIONS } from "./branching.js?v=20260428a";
 
 export const SCREEN_PROMPTS = {
   songFunction: "What should this song do today?",
@@ -48,6 +48,19 @@ export const EMOTION_FAMILY_DETAILS = {
   trust: ["safety", "warmth", "belonging", "appreciation", "openness"],
   angry: ["frustration", "hurt", "protest", "irritation", "protectiveness"],
   fear: ["anxiety", "worry", "vulnerability", "uncertainty", "overwhelm"],
+};
+
+// Opposite-valence families — shown when the valence toggle is engaged for a signal.
+// Each entry maps to the shadow side or absence of that emotion family.
+export const EMOTION_FAMILY_OPPOSITES = {
+  happy: ["grief", "emptiness", "numbness", "longing", "disconnection"],
+  sad: ["relief", "lightness", "acceptance", "peace", "release"],
+  surprise: ["numbness", "resignation", "flatness", "disconnection", "indifference"],
+  anticipation: ["dread", "avoidance", "paralysis", "apathy", "resignation"],
+  disgust: ["acceptance", "curiosity", "openness", "connection", "tolerance"],
+  trust: ["mistrust", "suspicion", "guardedness", "betrayal", "isolation"],
+  angry: ["calm", "understanding", "forgiveness", "compassion", "stillness"],
+  fear: ["safety", "courage", "groundedness", "certainty", "stillness"],
 };
 
 export const STORY_EMOTION_OPTIONS = [...new Set(Object.values(EMOTION_FAMILY_DETAILS).flat())];

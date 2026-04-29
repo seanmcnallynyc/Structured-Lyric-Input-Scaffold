@@ -25,14 +25,11 @@ import {
 } from "../src/decisionTreeData.js";
 
 test("screen prompts match the therapist-led songwriting flow", () => {
-  assert.equal(SCREEN_PROMPTS.songFunction, "What is the purpose of this song today?");
-  assert.equal(SCREEN_PROMPTS.emotionalSignal, "Which core emotions are most present?");
-  assert.equal(SCREEN_PROMPTS.coreRealization, "What truth or feeling should the song hold?");
+  assert.equal(SCREEN_PROMPTS.songFunction, "What should this song do today?");
+  assert.equal(SCREEN_PROMPTS.emotionalSignal, "What core emotions are most present?");
+  assert.equal(SCREEN_PROMPTS.coreRealization, "What truth should the song carry?");
   assert.equal(SCREEN_PROMPTS.situationAnchor, undefined);
-  assert.equal(
-    SCREEN_PROMPTS.reflectionCheck,
-    "Does this feel ready enough to turn into a draft?"
-  );
+  assert.equal(SCREEN_PROMPTS.reflectionCheck, "Does this feel ready to build?");
 });
 
 test("option vocabularies match the therapist session contract", () => {
@@ -43,6 +40,7 @@ test("option vocabularies match the therapist session contract", () => {
     "reconnect with strength",
     "hold onto something good",
     "let something go",
+    "say something important",
   ]);
 
   assert.deepEqual(EMOTIONAL_SIGNAL_OPTIONS, [
@@ -87,19 +85,19 @@ test("option vocabularies match the therapist session contract", () => {
   ]);
 
   assert.deepEqual(GENRE_OPTIONS, [
-    "acoustic singer-songwriter",
-    "indie folk",
+    "singer-songwriter",
     "piano ballad",
+    "folk",
+    "soul",
+    "soft rock",
+    "country",
     "cinematic ambient",
-    "pop emotional",
-    "country storytelling",
-    "alternative",
-    "indie rock",
-    "lo-fi indie",
+    "dream pop",
+    "R&B",
   ]);
 
   assert.deepEqual(REVIEW_ACTIONS.map((action) => action.label), [
-    "build session outputs",
+    "Generate prompts",
     "adjust feelings",
     "adjust imagery",
     "adjust music",

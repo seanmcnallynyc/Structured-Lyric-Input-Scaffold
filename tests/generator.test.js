@@ -15,7 +15,7 @@ function buildValidIntake(overrides = {}) {
     imagery_category: "Light Breaking Through",
     imagery_detail: "sunrise through curtains",
     musical_tone: "warm and hopeful",
-    genre: "indie folk",
+    genre: "folk",
     avoid_topics: ["graphic violence"],
     reflection_summary: {},
     ...overrides,
@@ -38,7 +38,7 @@ test("therapist summary captures the live session snapshot", () => {
   assert.match(summary, /Session purpose:/);
   assert.match(summary, /Core emotions: happy and trust/i);
   assert.match(summary, /Selected feelings: gratitude, appreciation, and warmth/i);
-  assert.match(summary, /Music direction: warm and hopeful, indie folk/i);
+  assert.match(summary, /Music direction: warm and hopeful, folk/i);
 });
 
 test("lyrics prompt contains the revised synthesis fields", () => {
