@@ -28,7 +28,7 @@ function createFakeStorage() {
 function validInput(overrides = {}) {
   return {
     song_function: "process a relationship",
-    branch_focus: "repair",
+    branch_focus: "wanting to repair things",
     emotional_signal: ["trust", "fear"],
     story_emotions: ["openness", "vulnerability", "warmth"],
     core_realization: "I want this song to make room for repair",

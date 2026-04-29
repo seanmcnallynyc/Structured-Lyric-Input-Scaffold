@@ -1,16 +1,17 @@
 import {
   DIRECTED_LISTENER_OPTIONS,
+  EMOTION_FAMILY_OPPOSITES,
   EMOTIONAL_SIGNAL_OPTIONS,
   GENRE_OPTIONS,
   MUSICAL_TONE_OPTIONS,
   SONG_FUNCTION_OPTIONS,
   SONG_PERSPECTIVE_OPTIONS,
-} from "./constants.js?v=20260321c";
-import { getBranchOptionsForFunction } from "./branching.js?v=20260321c";
+} from "./constants.js?v=20260428a";
+import { getBranchOptionsForFunction } from "./branching.js?v=20260428a";
 import {
   IMAGERY_CATEGORIES,
   getStoryEmotionOptions,
-} from "./decisionTreeData.js?v=20260321c";
+} from "./decisionTreeData.js?v=20260428a";
 
 export function createInitialIntake() {
   return {
@@ -133,8 +134,9 @@ export function validateIntake(rawIntake) {
     errors.push("Choose 1 to 3 second-layer feelings.");
   }
   const validStoryEmotionOptions = getStoryEmotionOptions(intake.emotional_signal);
+  const validValencedOptions = intake.emotional_signal.flatMap((signal) => EMOTION_FAMILY_OPPOSITES[signal] || []);
   for (const feeling of intake.story_emotions) {
-    if (!isAllowedValue(feeling, validStoryEmotionOptions)) {
+    if (!isAllowedValue(feeling, validStoryEmotionOptions) && !isAllowedValue(feeling, validValencedOptions)) {
       errors.push("Selected feelings must come from the chosen core emotion families.");
       break;
     }

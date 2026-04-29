@@ -1,5 +1,5 @@
-import { URGENT_SUPPORT_RESOURCES } from "./constants.js?v=20260321c";
-import { getCrisisResources } from "./mapping.js?v=20260321c";
+import { URGENT_SUPPORT_RESOURCES } from "./constants.js?v=20260428a";
+import { getCrisisResources } from "./mapping.js?v=20260428a";
 
 const CRISIS_PATTERNS = [
   /\b(kill myself|end my life|suicide|want to die)\b/i,

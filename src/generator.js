@@ -1,18 +1,32 @@
 import {
   computeMappedState,
   mergeReflectionSummary,
-} from "./mapping.js?v=20260321c";
-import { validateIntake } from "./schema.js?v=20260321c";
+} from "./mapping.js?v=20260428a";
+import { validateIntake } from "./schema.js?v=20260428a";
 import {
   anonymizeText,
   safetyPostcheck,
   safetyPrecheck,
-} from "./safety.js?v=20260321c";
+} from "./safety.js?v=20260428a";
 import {
   renderTherapistSummary,
   renderSunoLyricsPrompt,
   renderSunoStylesPrompt,
-} from "./templates.js?v=20260321c";
+} from "./templates.js?v=20260428a";
+
+// When the therapist edits the snapshot's music_direction field, derive genre from that
+// value so the Suno prompts reflect the edit rather than the original pill selection.
+// Format is "${musical_tone}, ${genre}" — if the override starts with the known tone prefix
+// we strip it; otherwise we treat the whole override as the genre description.
+function resolveEffectiveGenre(intake) {
+  const overriddenDir = intake.reflection_summary?.music_direction;
+  if (!overriddenDir) return intake.genre;
+  const prefix = intake.musical_tone + ", ";
+  if (intake.musical_tone && overriddenDir.startsWith(prefix)) {
+    return overriddenDir.slice(prefix.length).trim() || intake.genre;
+  }
+  return overriddenDir.trim() || intake.genre;
+}
 
 function buildContext(intake, mapped) {
   const reflectionSummary = Object.fromEntries(
@@ -27,6 +41,7 @@ function buildContext(intake, mapped) {
     reflection_summary: reflectionSummary,
     core_realization: anonymizeText(intake.core_realization),
     imagery_detail: anonymizeText(intake.imagery_detail),
+    effective_genre: resolveEffectiveGenre(intake),
   };
 }
 

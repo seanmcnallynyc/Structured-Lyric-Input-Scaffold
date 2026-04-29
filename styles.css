@@ -347,13 +347,77 @@ button.primary:hover {
   padding: 0;
 }
 
+.emotion-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
 .emotion-group-label {
-  margin: 0 0 10px;
+  margin: 0;
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.07em;
   color: var(--muted);
   text-transform: uppercase;
+}
+
+.valence-toggle {
+  flex-shrink: 0;
+  padding: 3px 10px;
+  border: 1.5px solid var(--line);
+  border-radius: 20px;
+  background: transparent;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition: border-color 150ms ease, color 150ms ease, background-color 150ms ease;
+}
+
+.valence-toggle:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.valence-toggle.active {
+  border-color: var(--primary);
+  background: #EAF3F1;
+  color: var(--primary);
+}
+
+.emotion-opposite-section {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line);
+}
+
+.emotion-opposite-label {
+  margin: 0 0 8px;
+  font-size: 0.72rem;
+  font-style: italic;
+  color: var(--muted);
+  letter-spacing: 0.03em;
+}
+
+.emotion-card.valenced {
+  border-style: dashed;
+  opacity: 0.88;
+}
+
+.emotion-card.valenced.selected {
+  border-style: solid;
+  opacity: 1;
+}
+
+.explore-hint {
+  margin: 0 0 12px;
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-style: italic;
 }
 
 .emotion-grid {

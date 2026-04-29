@@ -44,7 +44,7 @@ Music direction: ${context.reflection_summary.music_direction}`;
 }
 
 export function renderSunoLyricsPrompt(context) {
-  return `Write a ${context.genre} song.
+  return `Write a ${context.effective_genre || context.genre} song.
 Purpose: ${context.reflection_summary.purpose}.
 Specific angle: ${context.processing_focus}.
 Song is for: ${context.reflection_summary.song_for}.
@@ -68,7 +68,7 @@ Writing guidance:
 export function renderSunoStylesPrompt(context) {
   const opening = context.emotional_signal[0] || "restraint";
 
-  return `Create music for ${context.genre}.
+  return `Create music for ${context.effective_genre || context.genre}.
 Mood: ${truncateText(context.musical_guidance.mood, 90)}.
 Tempo: ${context.musical_guidance.tempo}.
 Story motion: ${truncateText(`${opening} toward ${context.arc_target}`, 70)}.

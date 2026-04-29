@@ -1,8 +1,10 @@
 import {
+  EMOTION_FAMILY_DETAILS,
+  EMOTION_FAMILY_OPPOSITES,
   REFLECTION_SUMMARY_FIELDS,
   REVIEW_ACTIONS,
   SCREEN_PROMPTS,
-} from "./constants.js?v=20260321c";
+} from "./constants.js?v=20260428a";
 import {
   FLOW_QUESTIONS,
   REVIEW_ACTION_TARGETS,
@@ -12,20 +14,20 @@ import {
   getImageryOptionsForCategory,
   getStoryEmotionGroups,
   getStoryEmotionOptions,
-} from "./decisionTreeData.js?v=20260321c";
-import { getBranchPromptForFunction } from "./branching.js?v=20260321c";
-import { generatePromptSet } from "./generator.js?v=20260321c";
+} from "./decisionTreeData.js?v=20260428a";
+import { getBranchPromptForFunction } from "./branching.js?v=20260428a";
+import { generatePromptSet } from "./generator.js?v=20260428a";
 import {
   buildReflectionSummary,
   mergeReflectionSummary,
-} from "./mapping.js?v=20260321c";
-import { normalizeIntake } from "./schema.js?v=20260321c";
+} from "./mapping.js?v=20260428a";
+import { normalizeIntake } from "./schema.js?v=20260428a";
 import {
   clearStoredSession,
   getStorage,
-} from "./store.js?v=20260321c";
+} from "./store.js?v=20260428a";
 
-const BUILD_ID = "20260321c";
+const BUILD_ID = "20260428a";
 const appEl = document.getElementById("app");
 const storage = getStorage();
 clearStoredSession(storage);
@@ -35,6 +37,7 @@ const state = {
   summaryOverrides: {},
   generation: null,
   errors: [],
+  valenceToggles: {},
 };
 
 const HOW_IT_WORKS_PHASES = [
@@ -161,6 +164,7 @@ function clearSessionState() {
   state.summaryOverrides = {};
   state.generation = null;
   state.errors = [];
+  state.valenceToggles = {};
 }
 
 function getSelectedStoryEmotionGroups() {
@@ -168,9 +172,11 @@ function getSelectedStoryEmotionGroups() {
 }
 
 function syncStoryEmotionSelections() {
-  const allowed = new Set(getStoryEmotionOptions(getAnswer("emotional_signal")));
+  const signals = Array.isArray(getAnswer("emotional_signal")) ? getAnswer("emotional_signal") : [];
+  const normalAllowed = new Set(getStoryEmotionOptions(signals));
+  const valencedAllowed = new Set(signals.flatMap((s) => EMOTION_FAMILY_OPPOSITES[s] || []));
   const current = Array.isArray(getAnswer("story_emotions")) ? getAnswer("story_emotions") : [];
-  const filtered = current.filter((value) => allowed.has(value));
+  const filtered = current.filter((value) => normalAllowed.has(value) || valencedAllowed.has(value));
   if (filtered.length !== current.length) {
     setAnswer("story_emotions", filtered);
   }
@@ -487,10 +493,12 @@ function renderButtonGroupField(question, labelText) {
 function renderMultiButtonGroupField(question, labelText) {
   const answers = Array.isArray(getAnswer(question.id)) ? getAnswer(question.id) : [];
   const options = getQuestionOptions(question);
+  const isEmotionalSignal = question.id === "emotional_signal";
 
   return `
     <div class="field">
       <span class="question-label">${escapeHtml(labelText)}${question.required ? " *" : ""}</span>
+      ${isEmotionalSignal ? `<p class="hint explore-hint">Take a moment to explore all the emotion families — what you're looking for might be in an unexpected place.</p>` : ""}
       <div class="btn-group">
         ${options
           .map(
@@ -528,33 +536,51 @@ function renderStoryEmotionQuestion(question, index) {
   return `
     <div class="question-group" id="question-${escapeHtml(question.id)}">
       <p class="question-label">${index}. ${escapeHtml(getQuestionLabel(question))}${question.required ? " *" : ""}</p>
+      <p class="hint explore-hint">Explore each family before choosing — the feeling you're looking for may be more specific than the first word that comes to mind.</p>
       <div class="emotion-groups">
-        ${groups.map(
-          (group) => `
+        ${groups.map((group) => {
+          const isToggled = Boolean(state.valenceToggles[group.id]);
+          const oppositeOptions = EMOTION_FAMILY_OPPOSITES[group.id] || [];
+
+          const renderCard = (option, isOpposite) => {
+            const checked = answers.includes(option) ? "checked" : "";
+            const selectedClass = checked ? " selected" : "";
+            return `<label class="emotion-card${selectedClass}${isOpposite ? " valenced" : ""}">
+              <input
+                class="question-checkbox"
+                data-question-id="${question.id}"
+                data-max-select="${question.maxSelect || ""}"
+                type="checkbox"
+                value="${escapeHtml(option)}"
+                ${checked}
+              >
+              <span>${escapeHtml(option)}</span>
+            </label>`;
+          };
+
+          return `
             <section class="emotion-group">
-              <p class="emotion-group-label">${escapeHtml(group.label)}</p>
-              <div class="emotion-grid">
-                ${group.options
-                  .map((option) => {
-                    const checked = answers.includes(option) ? "checked" : "";
-                    const selectedClass = checked ? " selected" : "";
-                    return `<label class="emotion-card${selectedClass}">
-                      <input
-                        class="question-checkbox"
-                        data-question-id="${question.id}"
-                        data-max-select="${question.maxSelect || ""}"
-                        type="checkbox"
-                        value="${escapeHtml(option)}"
-                        ${checked}
-                      >
-                      <span>${escapeHtml(option)}</span>
-                    </label>`;
-                  })
-                  .join("")}
+              <div class="emotion-group-header">
+                <p class="emotion-group-label">${escapeHtml(group.label)}</p>
+                ${oppositeOptions.length ? `<button
+                  class="valence-toggle${isToggled ? " active" : ""}"
+                  data-signal="${escapeHtml(group.id)}"
+                  type="button"
+                >${isToggled ? "hide opposite" : "show opposite"}</button>` : ""}
               </div>
+              <div class="emotion-grid">
+                ${group.options.map((o) => renderCard(o, false)).join("")}
+              </div>
+              ${isToggled && oppositeOptions.length ? `
+                <div class="emotion-opposite-section">
+                  <p class="emotion-opposite-label">and on the other side</p>
+                  <div class="emotion-grid">
+                    ${oppositeOptions.map((o) => renderCard(o, true)).join("")}
+                  </div>
+                </div>` : ""}
             </section>
-          `
-        ).join("")}
+          `;
+        }).join("")}
       </div>
       ${question.maxSelect ? `<p class="hint">Pick up to ${question.maxSelect} across the selected emotion families.</p>` : ""}
     </div>
@@ -939,6 +965,7 @@ function attachEvents() {
       }
 
       if (questionId === "emotional_signal") {
+        state.valenceToggles = {};
         syncStoryEmotionSelections();
       }
 
@@ -972,6 +999,7 @@ function attachEvents() {
       setAnswer(questionId, answers);
 
       if (questionId === "emotional_signal") {
+        state.valenceToggles = {};
         syncStoryEmotionSelections();
       }
 
@@ -1015,6 +1043,14 @@ function attachEvents() {
     });
     input.addEventListener("change", () => {
       state.errors = [];
+      renderApp();
+    });
+  });
+
+  document.querySelectorAll(".valence-toggle").forEach((button) => {
+    button.addEventListener("click", () => {
+      const signal = button.getAttribute("data-signal");
+      state.valenceToggles[signal] = !state.valenceToggles[signal];
       renderApp();
     });
   });

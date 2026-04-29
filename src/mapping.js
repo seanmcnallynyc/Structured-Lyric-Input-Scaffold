@@ -1,7 +1,7 @@
 import {
   CRISIS_RESOURCES_INTL_FALLBACK,
   CRISIS_RESOURCES_US,
-} from "./constants.js?v=20260321c";
+} from "./constants.js?v=20260428a";
 
 const PERSPECTIVE_GUIDANCE = {
   "first person, like my own voice":
@@ -167,6 +167,16 @@ function getBranchMeta(songFunction, branchFocus) {
         style_motion: "loosening, exhale-driven, and uncluttered",
         production_hint: "minimal percussion and softer attacks",
         vocal_guidance: "steady, soothing, and believable",
+      });
+    case "say something important":
+      return createBranchMeta({
+        purpose_phrase: `say something important — ${branchFocus}`,
+        arc_target: "heard and held",
+        branch_guidance: `Let the lyric carry ${branchFocus} with clarity and intention. This is something that needed to be said — keep it direct, human, and specific.`,
+        prompt_bias: `declaration_${branchFocus}`,
+        style_motion: "clear, intentional, and quietly resolute",
+        production_hint: "space and clarity over ornamentation",
+        vocal_guidance: "direct, warm, and purposeful",
       });
     default:
       return createBranchMeta({});
