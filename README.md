@@ -69,6 +69,7 @@ Data flow: `UI answers → validateIntake → safetyPrecheck → computeMappedSt
 ## Design decisions
 
 Each architectural decision is documented in `openspec/changes/structured-lyric-input-scaffold/` as a spec with explicit rationale, alternatives considered, and risk/trade-off analysis.
+This tool is built as a portfolio artifact. Each architectural and design decision is documented in `openspec/changes/suno-anxiety-downshift-scaffolder/` as a product spec with explicit rationale, alternatives considered, and risk/trade-off analysis.
 
 Key decisions documented there:
 - Deterministic rule-first mapping (vs. free-form LLM inference)
