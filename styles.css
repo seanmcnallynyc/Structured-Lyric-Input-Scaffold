@@ -785,22 +785,24 @@ button.primary:hover {
 .snapshot-rating {
   margin: 24px 0 8px;
   padding: 20px 24px;
-  background: var(--bg);
-  border: 1px solid var(--line);
+  background: #0F2422;
+  border: 1px solid var(--primary);
   border-radius: var(--radius);
   display: flex;
   align-items: center;
   gap: 20px;
   flex-wrap: wrap;
+  box-shadow: 0 0 0 4px var(--primary-glow);
 }
 
 .snapshot-rating__prompt {
   margin: 0;
   font-size: 0.95rem;
-  color: var(--ink);
-  font-weight: 500;
+  color: var(--primary-ink);
+  font-weight: 600;
   flex: 1;
   min-width: 200px;
+  letter-spacing: -0.01em;
 }
 
 .snapshot-rating__options {
@@ -810,18 +812,19 @@ button.primary:hover {
 
 .snapshot-rating__btn {
   padding: 8px 20px;
-  border-radius: 20px;
-  border: 1.5px solid var(--line);
-  background: var(--bg-alt);
-  color: var(--ink);
+  border-radius: 999px;
+  border: 1.5px solid var(--primary);
+  background: transparent;
+  color: var(--primary-ink);
   font-size: 0.9rem;
+  font-weight: 500;
   cursor: pointer;
   transition: border-color 0.15s, background 0.15s, color 0.15s;
 }
 
 .snapshot-rating__btn:hover {
-  border-color: var(--primary);
-  color: var(--primary);
+  background: var(--primary);
+  color: var(--primary-ink);
 }
 
 .snapshot-rating--submitted {
@@ -831,5 +834,5 @@ button.primary:hover {
 .snapshot-rating__thanks {
   margin: 0;
   font-size: 0.9rem;
-  color: var(--muted);
+  color: var(--primary);
 }
