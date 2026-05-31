@@ -50,7 +50,7 @@ test("lyrics prompt contains the revised synthesis fields", () => {
   assert.match(prompt, /Song is for:/);
   assert.match(prompt, /Core emotions:/);
   assert.match(prompt, /Selected feelings:/);
-  assert.match(prompt, /Anchor truth or feeling:/);
+  assert.match(prompt, /Core truth this song must carry:/);
   assert.match(prompt, /Use sunrise through curtains as a recurring concrete image/i);
 });
 

@@ -115,6 +115,7 @@ const QUESTION_BLOCKS = [
   { id: "listener_perspective", parentId: "directed_listener", childId: "song_perspective" },
   { id: "imagery_pair", parentId: "imagery_category", childId: "imagery_detail" },
   { id: "music_pair", parentId: "musical_tone", childId: "genre" },
+  "music_relationship",
   "avoid_topics",
 ];
 const REQUIRED_BLOCKS = QUESTION_BLOCKS.filter((block) => {
@@ -375,6 +376,7 @@ function buildRawIntakeFromFlow() {
     imagery_detail: resolveAnswerValue("imagery_detail"),
     musical_tone: resolveAnswerValue("musical_tone"),
     genre: resolveAnswerValue("genre"),
+    music_relationship: String(getAnswer("music_relationship") || ""),
     avoid_topics: parseAvoidTopics(getAnswer("avoid_topics")),
     reflection_summary: { ...state.summaryOverrides },
   };

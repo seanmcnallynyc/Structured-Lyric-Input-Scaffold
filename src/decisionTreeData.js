@@ -152,6 +152,14 @@ export const FLOW_QUESTIONS = [
     options: GENRE_OPTIONS,
   },
   {
+    id: "music_relationship",
+    label: "One thing about this person's relationship to music (optional)",
+    responseType: "text",
+    required: false,
+    placeholder: "Optional. For example: music helps her feel less alone, he uses music to process grief, she rarely listens but loves piano",
+    maxLength: 200,
+  },
+  {
     id: "avoid_topics",
     label: SCREEN_PROMPTS.avoidTopics,
     responseType: "text",
