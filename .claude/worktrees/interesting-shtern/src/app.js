@@ -1,10 +1,8 @@
 import {
-  EMOTION_FAMILY_DETAILS,
-  EMOTION_FAMILY_OPPOSITES,
   REFLECTION_SUMMARY_FIELDS,
   REVIEW_ACTIONS,
   SCREEN_PROMPTS,
-} from "./constants.js?v=20260428a";
+} from "./constants.js?v=20260321c";
 import {
   FLOW_QUESTIONS,
   REVIEW_ACTION_TARGETS,
@@ -14,20 +12,20 @@ import {
   getImageryOptionsForCategory,
   getStoryEmotionGroups,
   getStoryEmotionOptions,
-} from "./decisionTreeData.js?v=20260428a";
-import { getBranchPromptForFunction } from "./branching.js?v=20260428a";
-import { generatePromptSet } from "./generator.js?v=20260428a";
+} from "./decisionTreeData.js?v=20260321c";
+import { getBranchPromptForFunction } from "./branching.js?v=20260321c";
+import { generatePromptSet } from "./generator.js?v=20260321c";
 import {
   buildReflectionSummary,
   mergeReflectionSummary,
-} from "./mapping.js?v=20260428a";
-import { normalizeIntake } from "./schema.js?v=20260428a";
+} from "./mapping.js?v=20260321c";
+import { normalizeIntake } from "./schema.js?v=20260321c";
 import {
   clearStoredSession,
   getStorage,
-} from "./store.js?v=20260428a";
+} from "./store.js?v=20260321c";
 
-const BUILD_ID = "20260428a";
+const BUILD_ID = "20260321c";
 const appEl = document.getElementById("app");
 const storage = getStorage();
 clearStoredSession(storage);
@@ -37,8 +35,6 @@ const state = {
   summaryOverrides: {},
   generation: null,
   errors: [],
-  valenceToggles: {},
-  snapshotRating: null,
 };
 
 const HOW_IT_WORKS_PHASES = [
@@ -116,7 +112,6 @@ const QUESTION_BLOCKS = [
   { id: "listener_perspective", parentId: "directed_listener", childId: "song_perspective" },
   { id: "imagery_pair", parentId: "imagery_category", childId: "imagery_detail" },
   { id: "music_pair", parentId: "musical_tone", childId: "genre" },
-  "music_relationship",
   "avoid_topics",
 ];
 const REQUIRED_BLOCKS = QUESTION_BLOCKS.filter((block) => {
@@ -153,7 +148,6 @@ function setOtherAnswer(questionId, value) {
 
 function clearGeneratedOutput() {
   state.generation = null;
-  state.snapshotRating = null;
 }
 
 function resetBranchAnswers() {
@@ -167,8 +161,6 @@ function clearSessionState() {
   state.summaryOverrides = {};
   state.generation = null;
   state.errors = [];
-  state.valenceToggles = {};
-  state.snapshotRating = null;
 }
 
 function getSelectedStoryEmotionGroups() {
@@ -176,11 +168,9 @@ function getSelectedStoryEmotionGroups() {
 }
 
 function syncStoryEmotionSelections() {
-  const signals = Array.isArray(getAnswer("emotional_signal")) ? getAnswer("emotional_signal") : [];
-  const normalAllowed = new Set(getStoryEmotionOptions(signals));
-  const valencedAllowed = new Set(signals.flatMap((s) => EMOTION_FAMILY_OPPOSITES[s] || []));
+  const allowed = new Set(getStoryEmotionOptions(getAnswer("emotional_signal")));
   const current = Array.isArray(getAnswer("story_emotions")) ? getAnswer("story_emotions") : [];
-  const filtered = current.filter((value) => normalAllowed.has(value) || valencedAllowed.has(value));
+  const filtered = current.filter((value) => allowed.has(value));
   if (filtered.length !== current.length) {
     setAnswer("story_emotions", filtered);
   }
@@ -379,7 +369,6 @@ function buildRawIntakeFromFlow() {
     imagery_detail: resolveAnswerValue("imagery_detail"),
     musical_tone: resolveAnswerValue("musical_tone"),
     genre: resolveAnswerValue("genre"),
-    music_relationship: String(getAnswer("music_relationship") || ""),
     avoid_topics: parseAvoidTopics(getAnswer("avoid_topics")),
     reflection_summary: { ...state.summaryOverrides },
   };
@@ -455,81 +444,12 @@ function renderSingleQuestionField(question, labelText) {
   `;
 }
 
-function renderButtonGroupField(question, labelText) {
-  const answer = getAnswer(question.id) || "";
-  const options = getQuestionOptions(question);
-  const showOtherInput = answer === question.otherTrigger;
-
-  return `
-    <div class="field">
-      <span class="question-label">${escapeHtml(labelText)}${question.required ? " *" : ""}</span>
-      <div class="btn-group">
-        ${options
-          .map(
-            (option) =>
-              `<button
-                class="btn-option${answer === option ? " selected" : ""}"
-                data-question-id="${escapeHtml(question.id)}"
-                data-value="${escapeHtml(option)}"
-                type="button"
-              >${escapeHtml(option)}</button>`
-          )
-          .join("")}
-      </div>
-      ${
-        question.otherTrigger && showOtherInput
-          ? `<label class="field followup-field">
-              <span>${escapeHtml(question.otherLabel || "Add your own answer")}</span>
-              <input
-                class="question-other-input"
-                data-question-id="${escapeHtml(question.id)}"
-                type="text"
-                value="${escapeHtml(getOtherAnswer(question.id))}"
-                placeholder="${escapeHtml(question.otherPlaceholder || "")}"
-                maxlength="180"
-              >
-            </label>`
-          : ""
-      }
-    </div>
-  `;
-}
-
-function renderMultiButtonGroupField(question, labelText) {
-  const answers = Array.isArray(getAnswer(question.id)) ? getAnswer(question.id) : [];
-  const options = getQuestionOptions(question);
-  const isEmotionalSignal = question.id === "emotional_signal";
-
-  return `
-    <div class="field">
-      <span class="question-label">${escapeHtml(labelText)}${question.required ? " *" : ""}</span>
-      ${isEmotionalSignal ? `<p class="hint explore-hint">Take a moment to explore all the emotion families — what you're looking for might be in an unexpected place.</p>` : ""}
-      <div class="btn-group">
-        ${options
-          .map(
-            (option) =>
-              `<button
-                class="btn-option${answers.includes(option) ? " selected" : ""}"
-                data-question-id="${escapeHtml(question.id)}"
-                data-value="${escapeHtml(option)}"
-                data-max-select="${question.maxSelect || ""}"
-                data-multi="true"
-                type="button"
-              >${escapeHtml(option)}</button>`
-          )
-          .join("")}
-      </div>
-      ${question.maxSelect ? `<p class="hint">Pick up to ${question.maxSelect}.</p>` : ""}
-    </div>
-  `;
-}
-
 function renderSingleQuestion(question, index) {
   const label = `${index}. ${getQuestionLabel(question)}`;
 
   return `
     <div class="question-group" id="question-${escapeHtml(question.id)}">
-      ${renderButtonGroupField(question, label)}
+      ${renderSingleQuestionField(question, label)}
     </div>
   `;
 }
@@ -541,51 +461,33 @@ function renderStoryEmotionQuestion(question, index) {
   return `
     <div class="question-group" id="question-${escapeHtml(question.id)}">
       <p class="question-label">${index}. ${escapeHtml(getQuestionLabel(question))}${question.required ? " *" : ""}</p>
-      <p class="hint explore-hint">Explore each family before choosing — the feeling you're looking for may be more specific than the first word that comes to mind.</p>
       <div class="emotion-groups">
-        ${groups.map((group) => {
-          const isToggled = Boolean(state.valenceToggles[group.id]);
-          const oppositeOptions = EMOTION_FAMILY_OPPOSITES[group.id] || [];
-
-          const renderCard = (option, isOpposite) => {
-            const checked = answers.includes(option) ? "checked" : "";
-            const selectedClass = checked ? " selected" : "";
-            return `<label class="emotion-card${selectedClass}${isOpposite ? " valenced" : ""}">
-              <input
-                class="question-checkbox"
-                data-question-id="${question.id}"
-                data-max-select="${question.maxSelect || ""}"
-                type="checkbox"
-                value="${escapeHtml(option)}"
-                ${checked}
-              >
-              <span>${escapeHtml(option)}</span>
-            </label>`;
-          };
-
-          return `
+        ${groups.map(
+          (group) => `
             <section class="emotion-group">
-              <div class="emotion-group-header">
-                <p class="emotion-group-label">${escapeHtml(group.label)}</p>
-                ${oppositeOptions.length ? `<button
-                  class="valence-toggle${isToggled ? " active" : ""}"
-                  data-signal="${escapeHtml(group.id)}"
-                  type="button"
-                >${isToggled ? "hide opposite" : "show opposite"}</button>` : ""}
-              </div>
+              <p class="emotion-group-label">${escapeHtml(group.label)}</p>
               <div class="emotion-grid">
-                ${group.options.map((o) => renderCard(o, false)).join("")}
+                ${group.options
+                  .map((option) => {
+                    const checked = answers.includes(option) ? "checked" : "";
+                    const selectedClass = checked ? " selected" : "";
+                    return `<label class="emotion-card${selectedClass}">
+                      <input
+                        class="question-checkbox"
+                        data-question-id="${question.id}"
+                        data-max-select="${question.maxSelect || ""}"
+                        type="checkbox"
+                        value="${escapeHtml(option)}"
+                        ${checked}
+                      >
+                      <span>${escapeHtml(option)}</span>
+                    </label>`;
+                  })
+                  .join("")}
               </div>
-              ${isToggled && oppositeOptions.length ? `
-                <div class="emotion-opposite-section">
-                  <p class="emotion-opposite-label">and on the other side</p>
-                  <div class="emotion-grid">
-                    ${oppositeOptions.map((o) => renderCard(o, true)).join("")}
-                  </div>
-                </div>` : ""}
             </section>
-          `;
-        }).join("")}
+          `
+        ).join("")}
       </div>
       ${question.maxSelect ? `<p class="hint">Pick up to ${question.maxSelect} across the selected emotion families.</p>` : ""}
     </div>
@@ -597,11 +499,32 @@ function renderMultiQuestion(question, index) {
     return renderStoryEmotionQuestion(question, index);
   }
 
-  const label = `${index}. ${getQuestionLabel(question)}`;
+  const answers = Array.isArray(getAnswer(question.id)) ? getAnswer(question.id) : [];
+  const options = getQuestionOptions(question);
+  const label = getQuestionLabel(question);
 
   return `
     <div class="question-group" id="question-${escapeHtml(question.id)}">
-      ${renderMultiButtonGroupField(question, label)}
+      <p class="question-label">${index}. ${escapeHtml(label)}${question.required ? " *" : ""}</p>
+      <div class="choice-list">
+        ${options
+          .map((option) => {
+            const checked = answers.includes(option) ? "checked" : "";
+            return `<label class="choice">
+              <input
+                class="question-checkbox"
+                data-question-id="${question.id}"
+                data-max-select="${question.maxSelect || ""}"
+                type="checkbox"
+                value="${escapeHtml(option)}"
+                ${checked}
+              >
+              ${escapeHtml(option)}
+            </label>`;
+          })
+          .join("")}
+      </div>
+      ${question.maxSelect ? `<p class="hint">Pick up to ${question.maxSelect}.</p>` : ""}
     </div>
   `;
 }
@@ -635,12 +558,12 @@ function renderCompoundQuestion(parentQuestion, childQuestion, index) {
   const childMarkup = childQuestion
     ? childQuestion.responseType === "text"
       ? renderTextQuestionField(childQuestion, getQuestionLabel(childQuestion))
-      : renderButtonGroupField(childQuestion, getQuestionLabel(childQuestion))
+      : renderSingleQuestionField(childQuestion, getQuestionLabel(childQuestion))
     : "";
 
   return `
     <div class="question-group question-compound" id="question-${escapeHtml(parentQuestion.id)}">
-      ${renderButtonGroupField(parentQuestion, `${index}. ${getQuestionLabel(parentQuestion)}`)}
+      ${renderSingleQuestionField(parentQuestion, `${index}. ${getQuestionLabel(parentQuestion)}`)}
       ${
         childMarkup
           ? `<div class="question-followup" id="question-${escapeHtml(childQuestion.id)}">
@@ -838,37 +761,6 @@ function renderHowItWorks() {
   `;
 }
 
-function renderSnapshotRating() {
-  const options = [
-    { value: "yes", label: "Yes" },
-    { value: "somewhat", label: "Somewhat" },
-    { value: "no", label: "No" },
-  ];
-  const current = state.snapshotRating;
-
-  if (current) {
-    return `
-      <div class="snapshot-rating snapshot-rating--submitted">
-        <p class="snapshot-rating__thanks">Thanks — that helps improve the flow.</p>
-      </div>
-    `;
-  }
-
-  return `
-    <div class="snapshot-rating">
-      <p class="snapshot-rating__prompt">Does this output capture what you wanted to say?</p>
-      <div class="snapshot-rating__options">
-        ${options.map((opt) => `
-          <button
-            class="snapshot-rating__btn"
-            data-rating-value="${escapeHtml(opt.value)}"
-          >${escapeHtml(opt.label)}</button>
-        `).join("")}
-      </div>
-    </div>
-  `;
-}
-
 function renderResults() {
   if (!state.generation) {
     return "";
@@ -899,7 +791,6 @@ function renderResults() {
         ${renderPromptBlock("lyrics-prompt", "Lyrics", "", state.generation.output.lyricsPrompt)}
         ${renderPromptBlock("styles-prompt", "Styles", "Music or Genre", state.generation.output.stylesPrompt)}
       </div>
-      ${renderSnapshotRating()}
       ${renderSunoHelp()}
       ${renderHowItWorks()}
     </section>
@@ -911,12 +802,13 @@ function renderApp() {
     <main class="panel">
       <header class="app-header">
         <div>
-          <h1>Collaborative Songwriting Guide</h1>
-          <p class="subtle">Turn session reflection into a Suno-ready song draft.</p>
+          <h1>Music Therapy Session Prompt Guide</h1>
+          <p class="subtle">A structured session tool for helping a music therapist and client move from reflection to a Suno-ready song draft.</p>
           <p class="support-note header-note">Use this to support reflection and songwriting in session. It does not provide therapy or clinical judgment, and nothing is stored by default.</p>
         </div>
         <div class="header-actions">
           <button id="clear-session-btn">Start New Session</button>
+          <p class="subtle">Build ${BUILD_ID}</p>
         </div>
       </header>
       ${renderProgress()}
@@ -979,16 +871,15 @@ function scrollToQuestion(questionId) {
 }
 
 function attachEvents() {
-  // Single-select pill buttons
-  document.querySelectorAll(".btn-option:not([data-multi])").forEach((button) => {
-    button.addEventListener("click", () => {
-      const questionId = button.getAttribute("data-question-id");
-      const value = button.getAttribute("data-value");
+  document.querySelectorAll(".question-select").forEach((select) => {
+    select.addEventListener("change", (event) => {
+      const questionId = event.target.getAttribute("data-question-id");
       const question = getFlowQuestionById(questionId);
+      const nextValue = event.target.value;
 
-      setAnswer(questionId, value);
+      setAnswer(questionId, nextValue);
 
-      if (question?.otherTrigger && value !== question.otherTrigger) {
+      if (question?.otherTrigger && nextValue !== question.otherTrigger) {
         setOtherAnswer(questionId, "");
       }
 
@@ -1002,41 +893,6 @@ function attachEvents() {
       }
 
       if (questionId === "emotional_signal") {
-        state.valenceToggles = {};
-        syncStoryEmotionSelections();
-      }
-
-      clearGeneratedOutput();
-      state.errors = [];
-      renderApp();
-    });
-  });
-
-  // Multi-select pill buttons
-  document.querySelectorAll(".btn-option[data-multi]").forEach((button) => {
-    button.addEventListener("click", () => {
-      const questionId = button.getAttribute("data-question-id");
-      const value = button.getAttribute("data-value");
-      const maxSelect = Number(button.getAttribute("data-max-select") || 0);
-
-      const answers = Array.isArray(getAnswer(questionId)) ? [...getAnswer(questionId)] : [];
-      const idx = answers.indexOf(value);
-
-      if (idx >= 0) {
-        answers.splice(idx, 1);
-      } else {
-        if (maxSelect && answers.length >= maxSelect) {
-          state.errors = [`Pick up to ${maxSelect} options for this section.`];
-          renderApp();
-          return;
-        }
-        answers.push(value);
-      }
-
-      setAnswer(questionId, answers);
-
-      if (questionId === "emotional_signal") {
-        state.valenceToggles = {};
         syncStoryEmotionSelections();
       }
 
@@ -1080,14 +936,6 @@ function attachEvents() {
     });
     input.addEventListener("change", () => {
       state.errors = [];
-      renderApp();
-    });
-  });
-
-  document.querySelectorAll(".valence-toggle").forEach((button) => {
-    button.addEventListener("click", () => {
-      const signal = button.getAttribute("data-signal");
-      state.valenceToggles[signal] = !state.valenceToggles[signal];
       renderApp();
     });
   });
@@ -1137,13 +985,6 @@ function attachEvents() {
         behavior: "smooth",
         block: "start",
       });
-    });
-  });
-
-  document.querySelectorAll(".snapshot-rating__btn").forEach((button) => {
-    button.addEventListener("click", () => {
-      state.snapshotRating = button.getAttribute("data-rating-value");
-      renderApp();
     });
   });
 

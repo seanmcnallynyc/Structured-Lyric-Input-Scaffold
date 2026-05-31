@@ -71,3 +71,28 @@ This is the right moment: the therapist is already reading the snapshot to evalu
 ## What success looks like at launch
 
 A music therapist can complete the intake flow in a live session, review the snapshot, and paste the output into Suno — without breaking the therapeutic presence of the session. The client leaves having participated in a structured creative process. The therapist has a replicable, documentable artifact of that process.
+
+---
+
+## Implementation status: snapshot satisfaction metric
+
+The "Does this output capture what you wanted to say?" widget is built and live (Yes / Somewhat / No, shown below the generated output). The UI is complete.
+
+**What exists today:**
+- The rating is captured in client-side state (`state.snapshotRating`) and shown as confirmed feedback once selected.
+- The response resets when the session is cleared or a new generation is run.
+
+**What needs to happen before this metric is useful:**
+
+1. **Persistence** — Ratings currently live only in memory and are lost on page reload. `persistRating()` in `src/store.js` is already implemented and stores the rating in `localStorage` with a timestamp. It needs to be called when the user selects a rating. This is a one-line wire-up, intentionally held pending the broader PHI/consent decision (see [GitHub Issue #4](https://github.com/seanmcnallynyc/Structured-Lyric-Input-Scaffold/issues/4)).
+
+2. **Export or retrieval** — `localStorage` data is per-device and per-browser. A therapist can't review aggregate ratings without an export mechanism or a backend. Options in order of complexity:
+   - **Export to CSV button** (lowest lift): read `suno_prompt_scaffolder_ratings` from localStorage, serialize to CSV, trigger a download. No backend required. Suitable for a single therapist running their own sessions.
+   - **Anonymous backend log** (medium lift): POST de-identified ratings to a lightweight endpoint (e.g. a free-tier form backend or serverless function). Enables aggregate analysis across sessions and devices.
+   - **Research database** (highest lift): required if this is used in a formal clinical research context with IRB oversight.
+
+3. **Connecting rating to intake fields** — The satisfaction rating is only actionable if it can be correlated with what was answered in the intake. For example: do sessions with `song_function = "support calm"` rate higher than `"make sense of something"`? This requires the telemetry event (already built in `buildTelemetryEvent` in `src/generator.js`) to be stored alongside the rating. The data shape is already defined — it's a wiring and consent decision, not a design problem.
+
+4. **Sample size and validity** — A 3-point in-tool rating is a sentiment signal, not a clinical outcome measure. It tells you whether the prompt felt right to the therapist at the moment of generation, not whether the resulting song was therapeutically effective. For research purposes, this would need to be paired with a validated instrument or a structured post-session observation protocol. Defining that is out of scope for the tool itself but relevant to any IRB submission.
+
+**Decision needed before wiring persistence:** Does the tool need explicit consent language ("This session's structured data may be recorded to improve the tool") displayed before the rating is stored? That framing decision should come before the technical wire-up, not after.

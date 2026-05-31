@@ -780,3 +780,56 @@ button.primary:hover {
     width: 100%;
   }
 }
+
+/* Snapshot satisfaction rating */
+.snapshot-rating {
+  margin: 24px 0 8px;
+  padding: 20px 24px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.snapshot-rating__prompt {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--ink);
+  font-weight: 500;
+  flex: 1;
+  min-width: 200px;
+}
+
+.snapshot-rating__options {
+  display: flex;
+  gap: 8px;
+}
+
+.snapshot-rating__btn {
+  padding: 8px 20px;
+  border-radius: 20px;
+  border: 1.5px solid var(--line);
+  background: var(--bg-alt);
+  color: var(--ink);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+.snapshot-rating__btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.snapshot-rating--submitted {
+  justify-content: center;
+}
+
+.snapshot-rating__thanks {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
