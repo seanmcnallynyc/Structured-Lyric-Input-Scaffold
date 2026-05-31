@@ -58,4 +58,4 @@
 - [x] 8.5 Add crisis interruption tests ensuring zero prompt output when intent is detected.
 - [x] 8.6 Add integration test for full wizard-to-generation happy path including copy and ratings events.
 - [x] 8.7 Add determinism tests to verify equivalent structural guidance across repeated runs with identical intake and knob state.
-- [x] 8.8 Run `openspec validate suno-anxiety-downshift-scaffolder --strict` and resolve any issues.
+- [x] 8.8 Run `openspec validate structured-lyric-input-scaffold --strict` and resolve any issues.
