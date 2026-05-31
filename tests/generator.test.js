@@ -6,10 +6,10 @@ import { generatePromptSet } from "../src/generator.js";
 function buildValidIntake(overrides = {}) {
   return {
     song_function: "hold onto something good",
-    branch_focus: "gratitude",
+    branch_focus: "a moment I want to keep",
     emotional_signal: ["happy", "trust"],
     story_emotions: ["gratitude", "appreciation", "warmth"],
-    core_realization: "good things are worth making space for",
+    core_realization: "this moment deserves to stay with me",
     directed_listener: "this moment in life",
     song_perspective: "like a letter or reflection",
     imagery_category: "Light Breaking Through",

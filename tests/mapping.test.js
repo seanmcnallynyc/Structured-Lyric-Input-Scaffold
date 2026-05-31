@@ -10,7 +10,7 @@ import {
 function validInput(overrides = {}) {
   return {
     song_function: "hold onto something good",
-    branch_focus: "gratitude",
+    branch_focus: "a moment I want to keep",
     emotional_signal: ["happy", "trust"],
     story_emotions: ["gratitude", "belonging", "warmth"],
     core_realization: "this moment deserves to stay with me",
@@ -28,7 +28,7 @@ function validInput(overrides = {}) {
 
 test("reflection summary turns structured intake into a therapist-facing session snapshot", () => {
   const summary = buildReflectionSummary(validInput());
-  assert.match(summary.purpose, /hold onto gratitude/i);
+  assert.match(summary.purpose, /hold onto a moment I want to keep/i);
   assert.equal(summary.core_emotions, "happy and trust");
   assert.match(summary.feelings, /gratitude/);
   assert.equal(summary.song_for, "this moment in life");
@@ -55,7 +55,7 @@ test("mapped state derives branch-aware production guidance deterministically", 
 
   assert.deepEqual(first, second);
   assert.equal(first.arc_target, "kept close");
-  assert.match(first.branch_guidance, /gratitude/i);
+  assert.match(first.branch_guidance, /a moment I want to keep/i);
   assert.match(first.style_anchor, /folk/i);
   assert.match(first.style_motion, /warm|lifting/i);
   assert.match(first.production_palette.join(", "), /fingerpicked guitar|soft percussion|earthy harmonies/i);

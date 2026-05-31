@@ -64,6 +64,7 @@ export const SONG_FUNCTION_BRANCHES = {
       "staying soft",
       "starting again",
       "remembering what is still here",
+      "what my body has carried",
     ],
     realizationOptions: [
       "there is still something steady in me",
@@ -74,14 +75,14 @@ export const SONG_FUNCTION_BRANCHES = {
     ],
   },
   "hold onto something good": {
-    branchPrompt: "What kind of good feeling are we trying to hold onto?",
+    branchPrompt: "What is the song holding onto?",
     branchOptions: [
-      "joy",
-      "calm",
-      "love",
-      "gratitude",
-      "pride",
-      "a meaningful moment",
+      "a memory",
+      "a person",
+      "a feeling in my body",
+      "a moment I want to keep",
+      "a quality in myself",
+      "a relationship",
     ],
     realizationOptions: [
       "this moment deserves to stay with me",

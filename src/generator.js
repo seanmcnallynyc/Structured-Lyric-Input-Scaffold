@@ -20,12 +20,15 @@ import {
 // we strip it; otherwise we treat the whole override as the genre description.
 function resolveEffectiveGenre(intake) {
   const overriddenDir = intake.reflection_summary?.music_direction;
-  if (!overriddenDir) return intake.genre;
+  const baseGenre = intake.genre_qualifier
+    ? `${intake.genre} (${intake.genre_qualifier})`
+    : intake.genre;
+  if (!overriddenDir) return baseGenre;
   const prefix = intake.musical_tone + ", ";
   if (intake.musical_tone && overriddenDir.startsWith(prefix)) {
-    return overriddenDir.slice(prefix.length).trim() || intake.genre;
+    return overriddenDir.slice(prefix.length).trim() || baseGenre;
   }
-  return overriddenDir.trim() || intake.genre;
+  return overriddenDir.trim() || baseGenre;
 }
 
 function buildContext(intake, mapped) {

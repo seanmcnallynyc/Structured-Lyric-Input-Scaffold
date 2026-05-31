@@ -20,9 +20,9 @@ export const SONG_FUNCTION_OPTIONS = BRANCHED_SONG_FUNCTION_OPTIONS;
 export const EMOTIONAL_SIGNAL_OPTIONS = [
   "happy",
   "sad",
-  "surprise",
+  "wonder",
   "anticipation",
-  "disgust",
+  "discomfort",
   "trust",
   "angry",
   "fear",
@@ -42,9 +42,9 @@ export const DIRECTED_LISTENER_OPTIONS = [
 export const EMOTION_FAMILY_DETAILS = {
   happy: ["joy", "gratitude", "delight", "playfulness", "pride"],
   sad: ["grief", "disappointment", "loneliness", "heaviness", "tenderness"],
-  surprise: ["wonder", "amazement", "curiosity", "disbelief", "awakening"],
+  wonder: ["awe", "amazement", "curiosity", "disbelief", "awakening"],
   anticipation: ["hope", "readiness", "eagerness", "longing", "momentum"],
-  disgust: ["aversion", "discomfort", "resentment", "distance", "resistance"],
+  discomfort: ["aversion", "tension", "resentment", "distance", "resistance"],
   trust: ["safety", "warmth", "belonging", "appreciation", "openness"],
   angry: ["frustration", "hurt", "protest", "irritation", "protectiveness"],
   fear: ["anxiety", "worry", "vulnerability", "uncertainty", "overwhelm"],
@@ -55,9 +55,9 @@ export const EMOTION_FAMILY_DETAILS = {
 export const EMOTION_FAMILY_OPPOSITES = {
   happy: ["grief", "emptiness", "numbness", "longing", "disconnection"],
   sad: ["relief", "lightness", "acceptance", "peace", "release"],
-  surprise: ["numbness", "resignation", "flatness", "disconnection", "indifference"],
+  wonder: ["numbness", "resignation", "flatness", "disconnection", "indifference"],
   anticipation: ["dread", "avoidance", "paralysis", "apathy", "resignation"],
-  disgust: ["acceptance", "curiosity", "openness", "connection", "tolerance"],
+  discomfort: ["acceptance", "curiosity", "openness", "connection", "tolerance"],
   trust: ["mistrust", "suspicion", "guardedness", "betrayal", "isolation"],
   angry: ["calm", "understanding", "forgiveness", "compassion", "stillness"],
   fear: ["safety", "courage", "groundedness", "certainty", "stillness"],
@@ -91,9 +91,14 @@ export const GENRE_OPTIONS = [
   "soul",
   "soft rock",
   "country",
+  "R&B",
+  "jazz",
+  "gospel",
+  "classical",
+  "classic rock",
+  "hip-hop",
   "cinematic ambient",
   "dream pop",
-  "R&B",
 ];
 
 export const REFLECTION_SUMMARY_FIELDS = [

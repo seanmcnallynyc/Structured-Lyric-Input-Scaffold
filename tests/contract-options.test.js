@@ -46,9 +46,9 @@ test("option vocabularies match the therapist session contract", () => {
   assert.deepEqual(EMOTIONAL_SIGNAL_OPTIONS, [
     "happy",
     "sad",
-    "surprise",
+    "wonder",
     "anticipation",
-    "disgust",
+    "discomfort",
     "trust",
     "angry",
     "fear",
@@ -91,9 +91,14 @@ test("option vocabularies match the therapist session contract", () => {
     "soul",
     "soft rock",
     "country",
+    "R&B",
+    "jazz",
+    "gospel",
+    "classical",
+    "classic rock",
+    "hip-hop",
     "cinematic ambient",
     "dream pop",
-    "R&B",
   ]);
 
   assert.deepEqual(REVIEW_ACTIONS.map((action) => action.label), [
@@ -107,15 +112,15 @@ test("option vocabularies match the therapist session contract", () => {
 test("branch config drives the follow-up question and anchor options", () => {
   assert.equal(
     getBranchPromptForFunction("hold onto something good"),
-    "What kind of good feeling are we trying to hold onto?"
+    "What is the song holding onto?"
   );
   assert.deepEqual(getBranchOptionsForFunction("hold onto something good"), [
-    "joy",
-    "calm",
-    "love",
-    "gratitude",
-    "pride",
-    "a meaningful moment",
+    "a memory",
+    "a person",
+    "a feeling in my body",
+    "a moment I want to keep",
+    "a quality in myself",
+    "a relationship",
   ]);
   assert.deepEqual(getRealizationOptionsForFunction("hold onto something good"), [
     "this moment deserves to stay with me",
@@ -124,6 +129,11 @@ test("branch config drives the follow-up question and anchor options", () => {
     "this feeling belongs in the song",
     CUSTOM_REALIZATION_OPTION,
   ]);
+});
+
+test("reconnect with strength includes somatic branch option", () => {
+  const options = getBranchOptionsForFunction("reconnect with strength");
+  assert.ok(options.includes("what my body has carried"));
 });
 
 test("emotion families expose a second layer without using the outer wheel", () => {
@@ -140,6 +150,20 @@ test("emotion families expose a second layer without using the outer wheel", () 
     "belonging",
     "appreciation",
     "openness",
+  ]);
+  assert.deepEqual(EMOTION_FAMILY_DETAILS.wonder, [
+    "awe",
+    "amazement",
+    "curiosity",
+    "disbelief",
+    "awakening",
+  ]);
+  assert.deepEqual(EMOTION_FAMILY_DETAILS.discomfort, [
+    "aversion",
+    "tension",
+    "resentment",
+    "distance",
+    "resistance",
   ]);
 
   assert.deepEqual(getStoryEmotionGroups(["happy", "trust"]), [
@@ -166,12 +190,19 @@ test("imagery and flow order preserve the guided intake structure", () => {
     "Light Breaking Through",
     "Urban / City Life",
     "Water / Reflection",
+    "Warmth / Connection",
+    "Body / Breath",
   ]);
 
+  // directed_listener now appears before core_realization
   assert.deepEqual(
     FLOW_QUESTIONS.slice(0, 5).map((question) => question.id),
-    ["song_function", "branch_focus", "emotional_signal", "story_emotions", "core_realization"]
+    ["song_function", "branch_focus", "emotional_signal", "story_emotions", "directed_listener"]
   );
+
+  const coreRealizationIndex = FLOW_QUESTIONS.findIndex((q) => q.id === "core_realization");
+  const directedListenerIndex = FLOW_QUESTIONS.findIndex((q) => q.id === "directed_listener");
+  assert.ok(directedListenerIndex < coreRealizationIndex, "directed_listener should gate before core_realization");
 
   const storyEmotionQuestion = FLOW_QUESTIONS.find((question) => question.id === "story_emotions");
   assert.equal(storyEmotionQuestion.dependsOn, "emotional_signal");
@@ -179,6 +210,10 @@ test("imagery and flow order preserve the guided intake structure", () => {
   const imageryDetailQuestion = FLOW_QUESTIONS.find((question) => question.id === "imagery_detail");
   assert.equal(imageryDetailQuestion.dependsOn, "imagery_category");
   assert.equal(imageryDetailQuestion.otherTrigger, "write my own image...");
+
+  const genreQualifierQuestion = FLOW_QUESTIONS.find((q) => q.id === "genre_qualifier");
+  assert.ok(genreQualifierQuestion, "genre_qualifier question should exist");
+  assert.equal(genreQualifierQuestion.required, false);
 
   assert.equal(FLOW_QUESTIONS.some((question) => question.id === "situation_anchor"), false);
   assert.equal(FLOW_QUESTIONS.some((question) => question.id === "narrative_focus"), false);

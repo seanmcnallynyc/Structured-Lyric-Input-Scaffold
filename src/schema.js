@@ -27,6 +27,7 @@ export function createInitialIntake() {
     musical_tone: "",
     genre: "",
     avoid_topics: [],
+    genre_qualifier: "",
     music_relationship: "",
     reflection_summary: {},
     computed: {
@@ -94,6 +95,7 @@ export function normalizeIntake(rawIntake) {
     musical_tone: normalizeString(rawIntake.musical_tone),
     genre: normalizeString(rawIntake.genre),
     avoid_topics: normalizeArray(rawIntake.avoid_topics).map(normalizeString).filter(Boolean).slice(0, 12),
+    genre_qualifier: normalizeString(rawIntake.genre_qualifier).slice(0, 60),
     music_relationship: normalizeString(rawIntake.music_relationship).slice(0, 200),
     reflection_summary: normalizeSummary(rawIntake.reflection_summary),
   };

@@ -66,9 +66,14 @@ const GENRE_PRODUCTION_MAP = {
   "soul": ["warm keys", "soft rhythm section", "expressive vocal"],
   "soft rock": ["clean electric guitar", "gentle rhythm section", "melodic vocal"],
   "country": ["acoustic guitar", "light rhythm section", "story-forward vocal"],
+  "R&B": ["warm keys", "gentle groove", "soulful vocal"],
+  "jazz": ["upright bass or piano trio", "brushed drums", "warm horn or vocal"],
+  "gospel": ["organ or piano", "full choir harmonies", "call-and-response vocal"],
+  "classical": ["strings", "piano", "orchestral dynamics"],
+  "classic rock": ["electric guitar", "live drums", "driving vocal"],
+  "hip-hop": ["sampled or live beat", "warm bass", "spoken or sung vocal"],
   "cinematic ambient": ["pads", "textural swells", "ambient piano"],
   "dream pop": ["reverb-washed guitar", "shimmering synths", "breathy vocal"],
-  "R&B": ["warm keys", "gentle groove", "soulful vocal"],
 };
 
 function hashText(input) {
@@ -188,7 +193,10 @@ function buildPurposeSummary(intake) {
 }
 
 function buildMusicDirection(intake) {
-  return `${intake.musical_tone}, ${intake.genre}`;
+  const genreLabel = intake.genre_qualifier
+    ? `${intake.genre} (${intake.genre_qualifier})`
+    : intake.genre;
+  return `${intake.musical_tone}, ${genreLabel}`;
 }
 
 export function buildReflectionSummary(intake) {

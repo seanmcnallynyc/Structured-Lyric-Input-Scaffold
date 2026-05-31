@@ -52,12 +52,22 @@ export const IMAGERY_CATEGORIES = {
   "Urban / City Life": [
     "neon signs in the rain",
     "late night subway rides",
-    "a bar closing at 2am",
+    "a city street just before morning",
   ],
   "Water / Reflection": [
     "ripples in a still lake",
     "rain on the windshield",
     "reflections in a river",
+  ],
+  "Warmth / Connection": [
+    "a full table of people you love",
+    "morning light in a room you know well",
+    "a voice on the phone you've been waiting for",
+  ],
+  "Body / Breath": [
+    "the feeling of a slow exhale",
+    "hands held in silence",
+    "the weight of a body finally resting",
   ],
 };
 
@@ -95,17 +105,6 @@ export const FLOW_QUESTIONS = [
     options: STORY_EMOTION_OPTIONS,
   },
   {
-    id: "core_realization",
-    label: SCREEN_PROMPTS.coreRealization,
-    responseType: "single",
-    required: true,
-    dependsOn: "song_function",
-    options: [],
-    otherTrigger: CUSTOM_REALIZATION_OPTION,
-    otherLabel: "Add your own truth",
-    otherPlaceholder: "A short truth you want the song to hold",
-  },
-  {
     id: "directed_listener",
     label: SCREEN_PROMPTS.directedListener,
     responseType: "single",
@@ -118,6 +117,17 @@ export const FLOW_QUESTIONS = [
     responseType: "single",
     required: true,
     options: SONG_PERSPECTIVE_OPTIONS,
+  },
+  {
+    id: "core_realization",
+    label: SCREEN_PROMPTS.coreRealization,
+    responseType: "single",
+    required: true,
+    dependsOn: "song_function",
+    options: [],
+    otherTrigger: CUSTOM_REALIZATION_OPTION,
+    otherLabel: "Add your own truth",
+    otherPlaceholder: "A short truth you want the song to hold",
   },
   {
     id: "imagery_category",
@@ -150,6 +160,15 @@ export const FLOW_QUESTIONS = [
     responseType: "single",
     required: true,
     options: GENRE_OPTIONS,
+  },
+  {
+    id: "genre_qualifier",
+    label: "Add a style or era (optional)",
+    responseType: "text",
+    required: false,
+    dependsOn: "genre",
+    placeholder: "e.g. bebop, fingerstyle, 70s, big band, baroque, lo-fi...",
+    maxLength: 60,
   },
   {
     id: "music_relationship",
