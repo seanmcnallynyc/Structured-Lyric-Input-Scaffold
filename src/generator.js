@@ -103,6 +103,10 @@ export function generatePromptSet(rawIntake, options = {}) {
   };
 }
 
+// persistGeneration (store.js) is intentionally not called here.
+// The telemetry object is returned to the caller so wiring can happen once
+// PHI disclosure and consent strategy are resolved. See store.js for the
+// data shape — no PII is stored; only structured metadata.
 export function buildTelemetryEvent(context) {
   return {
     generated_at: new Date().toISOString(),

@@ -128,7 +128,9 @@ export function safetyPrecheck(intake, options = {}) {
 
 export function safetyPostcheck(promptBlock, intake) {
   const content = String(promptBlock || "");
-  const policyCheckContent = content.replace(/Avoid(?: topics)?:[^\n]*/gi, "");
+  const policyCheckContent = content
+    .replace(/Avoid(?: topics)?:[^\n]*/gi, "")
+    .replace(/(?:Musical|Content) avoids:[^\n]*/gi, "");
 
   if (containsDiscrimination(policyCheckContent)) {
     throw new Error("Output blocked by anti-discrimination safety policy.");

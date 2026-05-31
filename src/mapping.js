@@ -60,15 +60,15 @@ const MUSICAL_TONE_MAP = {
 };
 
 const GENRE_PRODUCTION_MAP = {
-  "acoustic singer-songwriter": ["acoustic guitar", "light piano support", "close vocal"],
-  "indie folk": ["fingerpicked guitar", "soft percussion", "earthy harmonies"],
+  "singer-songwriter": ["acoustic guitar", "light piano support", "close vocal"],
   "piano ballad": ["felt piano", "subtle strings", "intimate vocal"],
+  "folk": ["fingerpicked guitar", "soft percussion", "earthy harmonies"],
+  "soul": ["warm keys", "soft rhythm section", "expressive vocal"],
+  "soft rock": ["clean electric guitar", "gentle rhythm section", "melodic vocal"],
+  "country": ["acoustic guitar", "light rhythm section", "story-forward vocal"],
   "cinematic ambient": ["pads", "textural swells", "ambient piano"],
-  "pop emotional": ["clean drums", "piano or synth bed", "wide chorus lift"],
-  "country storytelling": ["acoustic guitar", "light rhythm section", "story-forward vocal"],
-  alternative: ["moody guitars", "restrained rhythm section", "atmospheric layers"],
-  "indie rock": ["guitar-driven arrangement", "live drums with restraint", "dynamic lift"],
-  "lo-fi indie": ["soft beat", "tape texture", "dreamy guitar or keys"],
+  "dream pop": ["reverb-washed guitar", "shimmering synths", "breathy vocal"],
+  "R&B": ["warm keys", "gentle groove", "soulful vocal"],
 };
 
 function hashText(input) {

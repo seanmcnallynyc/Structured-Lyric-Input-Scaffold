@@ -38,6 +38,7 @@ const state = {
   generation: null,
   errors: [],
   valenceToggles: {},
+  snapshotRating: null,
 };
 
 const HOW_IT_WORKS_PHASES = [
@@ -115,6 +116,7 @@ const QUESTION_BLOCKS = [
   { id: "listener_perspective", parentId: "directed_listener", childId: "song_perspective" },
   { id: "imagery_pair", parentId: "imagery_category", childId: "imagery_detail" },
   { id: "music_pair", parentId: "musical_tone", childId: "genre" },
+  "music_relationship",
   "avoid_topics",
 ];
 const REQUIRED_BLOCKS = QUESTION_BLOCKS.filter((block) => {
@@ -151,6 +153,7 @@ function setOtherAnswer(questionId, value) {
 
 function clearGeneratedOutput() {
   state.generation = null;
+  state.snapshotRating = null;
 }
 
 function resetBranchAnswers() {
@@ -165,6 +168,7 @@ function clearSessionState() {
   state.generation = null;
   state.errors = [];
   state.valenceToggles = {};
+  state.snapshotRating = null;
 }
 
 function getSelectedStoryEmotionGroups() {
@@ -375,6 +379,7 @@ function buildRawIntakeFromFlow() {
     imagery_detail: resolveAnswerValue("imagery_detail"),
     musical_tone: resolveAnswerValue("musical_tone"),
     genre: resolveAnswerValue("genre"),
+    music_relationship: String(getAnswer("music_relationship") || ""),
     avoid_topics: parseAvoidTopics(getAnswer("avoid_topics")),
     reflection_summary: { ...state.summaryOverrides },
   };
@@ -833,6 +838,37 @@ function renderHowItWorks() {
   `;
 }
 
+function renderSnapshotRating() {
+  const options = [
+    { value: "yes", label: "Yes" },
+    { value: "somewhat", label: "Somewhat" },
+    { value: "no", label: "No" },
+  ];
+  const current = state.snapshotRating;
+
+  if (current) {
+    return `
+      <div class="snapshot-rating snapshot-rating--submitted">
+        <p class="snapshot-rating__thanks">Thanks — that helps improve the flow.</p>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="snapshot-rating">
+      <p class="snapshot-rating__prompt">Does this output capture what you wanted to say?</p>
+      <div class="snapshot-rating__options">
+        ${options.map((opt) => `
+          <button
+            class="snapshot-rating__btn"
+            data-rating-value="${escapeHtml(opt.value)}"
+          >${escapeHtml(opt.label)}</button>
+        `).join("")}
+      </div>
+    </div>
+  `;
+}
+
 function renderResults() {
   if (!state.generation) {
     return "";
@@ -863,6 +899,7 @@ function renderResults() {
         ${renderPromptBlock("lyrics-prompt", "Lyrics", "", state.generation.output.lyricsPrompt)}
         ${renderPromptBlock("styles-prompt", "Styles", "Music or Genre", state.generation.output.stylesPrompt)}
       </div>
+      ${renderSnapshotRating()}
       ${renderSunoHelp()}
       ${renderHowItWorks()}
     </section>
@@ -1100,6 +1137,13 @@ function attachEvents() {
         behavior: "smooth",
         block: "start",
       });
+    });
+  });
+
+  document.querySelectorAll(".snapshot-rating__btn").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.snapshotRating = button.getAttribute("data-rating-value");
+      renderApp();
     });
   });
 

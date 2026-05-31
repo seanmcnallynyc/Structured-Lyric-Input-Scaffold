@@ -1,5 +1,6 @@
 .DS_Store
 .agent/
+.claude/
 .codex/
 .cursor/
 node_modules/

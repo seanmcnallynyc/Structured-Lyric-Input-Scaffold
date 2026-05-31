@@ -19,7 +19,7 @@ function validInput(overrides = {}) {
     imagery_category: "Light Breaking Through",
     imagery_detail: "the first warm day of spring",
     musical_tone: "warm and hopeful",
-    genre: "indie folk",
+    genre: "folk",
     avoid_topics: [],
     reflection_summary: {},
     ...overrides,
@@ -34,7 +34,7 @@ test("reflection summary turns structured intake into a therapist-facing session
   assert.equal(summary.song_for, "this moment in life");
   assert.equal(summary.anchor, "this moment deserves to stay with me");
   assert.equal(summary.imagery, "the first warm day of spring");
-  assert.equal(summary.music_direction, "warm and hopeful, indie folk");
+  assert.equal(summary.music_direction, "warm and hopeful, folk");
 });
 
 test("summary overrides replace only the edited snapshot lines", () => {
@@ -56,9 +56,9 @@ test("mapped state derives branch-aware production guidance deterministically", 
   assert.deepEqual(first, second);
   assert.equal(first.arc_target, "kept close");
   assert.match(first.branch_guidance, /gratitude/i);
-  assert.match(first.style_anchor, /indie folk/i);
+  assert.match(first.style_anchor, /folk/i);
   assert.match(first.style_motion, /warm|lifting/i);
-  assert.match(first.production_palette.join(", "), /fingerpicked guitar|earthy harmonies/i);
+  assert.match(first.production_palette.join(", "), /fingerpicked guitar|soft percussion|earthy harmonies/i);
 });
 
 test("support-calm branch maps to steadier guidance", () => {
