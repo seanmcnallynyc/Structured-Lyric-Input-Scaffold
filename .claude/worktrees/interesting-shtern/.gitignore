@@ -1,7 +1,0 @@
-.DS_Store
-.agent/
-.codex/
-.cursor/
-node_modules/
-coverage/
-dist/
