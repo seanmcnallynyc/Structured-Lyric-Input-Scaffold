@@ -1,15 +1,15 @@
 :root {
-  --bg: #F7F8FA;
-  --bg-alt: #FFFFFF;
-  --ink: #1A2332;
-  --muted: #6B7684;
-  --panel: #FFFFFF;
-  --line: #E2E8EF;
-  --primary: #2B7A6F;
-  --primary-ink: #F0FAF8;
-  --warn: #B91C1C;
+  --bg: #0A0A0A;
+  --bg-alt: #141414;
+  --ink: #EDEDED;
+  --muted: #8A8F98;
+  --panel: #141414;
+  --line: #2A2A2A;
+  --primary: #3D9E91;
+  --primary-ink: #E8F5F3;
+  --warn: #EF4444;
   --radius: 12px;
-  --shadow: 0 2px 16px rgba(26, 35, 50, 0.07);
+  --shadow: 0 2px 24px rgba(0, 0, 0, 0.5);
 }
 
 * {
@@ -213,14 +213,14 @@ button.primary {
 }
 
 button.primary:hover {
-  background: #246860;
-  border-color: #246860;
+  background: #2F8077;
+  border-color: #2F8077;
 }
 
 .errors {
   margin-top: 12px;
-  border: 1px solid #FECACA;
-  background: #FEF2F2;
+  border: 1px solid #7F1D1D;
+  background: #2D0F0F;
   border-radius: var(--radius);
   padding: 12px 14px;
   color: var(--warn);
@@ -238,8 +238,8 @@ button.primary:hover {
 
 .results.warning {
   border-radius: var(--radius);
-  border: 1px solid #FECACA;
-  background: #FEF2F2;
+  border: 1px solid #7F1D1D;
+  background: #2D0F0F;
   padding: 14px;
   color: var(--warn);
 }
@@ -385,7 +385,7 @@ button.primary:hover {
 
 .valence-toggle.active {
   border-color: var(--primary);
-  background: #EAF3F1;
+  background: #1A2E2C;
   color: var(--primary);
 }
 
@@ -449,7 +449,7 @@ button.primary:hover {
 
 .emotion-card.selected {
   border-color: var(--primary);
-  background: #EAF3F1;
+  background: #1A2E2C;
 }
 
 .emotion-card input {
@@ -507,12 +507,12 @@ button.primary:hover {
 }
 
 .required-pill {
-  background: #D1FAE5;
-  color: #065F46;
+  background: #063D2B;
+  color: #6EE7B7;
 }
 
 .tangential-pill {
-  background: #F1F5F9;
+  background: #1E2530;
   color: var(--muted);
 }
 
@@ -639,8 +639,8 @@ button.primary:hover {
 }
 
 .artifact-box {
-  background: #EAF3F1;
-  border-color: #B6D9D4;
+  background: #1A2E2C;
+  border-color: #2B5E58;
 }
 
 .framework-arrow {
@@ -733,9 +733,9 @@ button.primary:hover {
 }
 
 .knob-btn.active {
-  background: #D1FAE5;
+  background: #063D2B;
   border-color: #6EE7B7;
-  color: #065F46;
+  color: #6EE7B7;
 }
 
 @media (max-width: 720px) {

@@ -38,7 +38,7 @@ node --test
 
 ## Deployed version
 
-[collaborative-songwriting-guide.github.io](https://seanmcnallynyc.github.io/Structured-Lyric-Input-Scaffold/) *(or your GitHub Pages URL)*
+[suno.seanmcnallyusa.com](https://suno.seanmcnallyusa.com)
 
 ## Architecture
 
@@ -66,8 +66,9 @@ Data flow: `UI answers → validateIntake → safetyPrecheck → computeMappedSt
 - **Postcheck**: runs on every output block — blocks discriminatory content, graphic content, and user-specified avoid topics
 - **PII anonymization**: strips email addresses, phone numbers, @handles, addresses, and "my name is X" patterns from all output
 
-## Product decisions
+## Design decisions
 
+Each architectural decision is documented in `openspec/changes/structured-lyric-input-scaffold/` as a spec with explicit rationale, alternatives considered, and risk/trade-off analysis.
 This tool is built as a portfolio artifact. Each architectural and design decision is documented in `openspec/changes/suno-anxiety-downshift-scaffolder/` as a product spec with explicit rationale, alternatives considered, and risk/trade-off analysis.
 
 Key decisions documented there:

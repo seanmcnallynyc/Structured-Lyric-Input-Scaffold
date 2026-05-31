@@ -24,9 +24,9 @@ The questions in the intake flow — what the song should do, who it's for, what
 
 The therapist focuses on the client. The tool handles the synthesis.
 
-## PM decisions in this repo
+## Design decisions in this repo
 
-Every design choice here is a product decision with a rationale:
+Every design choice here has a rationale:
 
 - **Question selection and order** — what clinical constructs matter for song creation (emotion families, song function, imagery, perspective) and in what sequence they become useful
 - **Response type per question** — multi-select limits attention-splitting; free text is reserved for questions where constraint would lose signal
