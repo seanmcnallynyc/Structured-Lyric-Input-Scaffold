@@ -68,7 +68,7 @@ Data flow: `UI answers → validateIntake → safetyPrecheck → computeMappedSt
 
 ## Product decisions
 
-This tool is built as a portfolio artifact for a career transition into AI Product Management. Each architectural and design decision is documented in `openspec/changes/suno-anxiety-downshift-scaffolder/` as a product spec with explicit rationale, alternatives considered, and risk/trade-off analysis.
+This tool is built as a portfolio artifact. Each architectural and design decision is documented in `openspec/changes/suno-anxiety-downshift-scaffolder/` as a product spec with explicit rationale, alternatives considered, and risk/trade-off analysis.
 
 Key decisions documented there:
 - Deterministic rule-first mapping (vs. free-form LLM inference)
