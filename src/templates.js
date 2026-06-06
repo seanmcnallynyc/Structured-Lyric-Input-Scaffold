@@ -46,7 +46,7 @@ Music direction: ${context.reflection_summary.music_direction}`;
 export function renderSunoLyricsPrompt(context) {
   const anchor = context.reflection_summary.anchor;
   return `Write a ${context.effective_genre || context.genre} song.
-Core truth this song must carry: "${anchor}" — return to this in the chorus or refrain.
+Emotional core: ${anchor} — let this feeling shape the song; do not use these words directly.
 Purpose: ${context.reflection_summary.purpose}.
 Specific angle: ${context.processing_focus}.
 Song is for: ${context.reflection_summary.song_for}.
@@ -58,7 +58,6 @@ Emotional arc: ${context.emotional_arc}.
 Writing guidance:
 - ${context.branch_guidance}
 - ${context.perspective_guidance}
-- The anchor truth ("${anchor}") should appear in its own line or as a repeated phrase — do not bury it.
 - Keep the lyric emotionally specific, concrete, and singable.
 - Avoid generic platitudes, forced rhymes, and vague inspirational language.
 - Let the song feel human, collaborative, and grounded rather than theatrical.
