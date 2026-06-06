@@ -1,18 +1,18 @@
 import {
   computeMappedState,
   mergeReflectionSummary,
-} from "./mapping.js?v=20260428a";
-import { validateIntake } from "./schema.js?v=20260428a";
+} from "./mapping.js?v=20260606a";
+import { validateIntake } from "./schema.js?v=20260606a";
 import {
   anonymizeText,
   safetyPostcheck,
   safetyPrecheck,
-} from "./safety.js?v=20260428a";
+} from "./safety.js?v=20260606a";
 import {
   renderTherapistSummary,
   renderSunoLyricsPrompt,
   renderSunoStylesPrompt,
-} from "./templates.js?v=20260428a";
+} from "./templates.js?v=20260606a";
 
 // When the therapist edits the snapshot's music_direction field, derive genre from that
 // value so the Suno prompts reflect the edit rather than the original pill selection.

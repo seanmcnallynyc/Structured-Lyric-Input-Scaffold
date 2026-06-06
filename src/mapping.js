@@ -1,7 +1,7 @@
 import {
   CRISIS_RESOURCES_INTL_FALLBACK,
   CRISIS_RESOURCES_US,
-} from "./constants.js?v=20260428a";
+} from "./constants.js?v=20260606a";
 
 const PERSPECTIVE_GUIDANCE = {
   "first person, like my own voice":

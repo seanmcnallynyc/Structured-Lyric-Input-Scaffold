@@ -9,12 +9,12 @@ import {
   SONG_FUNCTION_OPTIONS,
   SONG_PERSPECTIVE_OPTIONS,
   STORY_EMOTION_OPTIONS,
-} from "./constants.js?v=20260428a";
+} from "./constants.js?v=20260606a";
 import {
   CUSTOM_REALIZATION_OPTION,
   getBranchOptionsForFunction,
   getRealizationOptionsForFunction,
-} from "./branching.js?v=20260428a";
+} from "./branching.js?v=20260606a";
 
 export const CUSTOM_IMAGERY_OPTION = "write my own image...";
 

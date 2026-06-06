@@ -1,4 +1,4 @@
-import { SONG_FUNCTION_OPTIONS as BRANCHED_SONG_FUNCTION_OPTIONS } from "./branching.js?v=20260428a";
+import { SONG_FUNCTION_OPTIONS as BRANCHED_SONG_FUNCTION_OPTIONS } from "./branching.js?v=20260606a";
 
 export const SCREEN_PROMPTS = {
   songFunction: "What should this song do today?",

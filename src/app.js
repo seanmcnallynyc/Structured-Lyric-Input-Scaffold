@@ -4,7 +4,7 @@ import {
   REFLECTION_SUMMARY_FIELDS,
   REVIEW_ACTIONS,
   SCREEN_PROMPTS,
-} from "./constants.js?v=20260530b";
+} from "./constants.js?v=20260606a";
 import {
   FLOW_QUESTIONS,
   REVIEW_ACTION_TARGETS,
@@ -14,20 +14,20 @@ import {
   getImageryOptionsForCategory,
   getStoryEmotionGroups,
   getStoryEmotionOptions,
-} from "./decisionTreeData.js?v=20260530b";
-import { getBranchPromptForFunction } from "./branching.js?v=20260530b";
-import { generatePromptSet } from "./generator.js?v=20260530b";
+} from "./decisionTreeData.js?v=20260606a";
+import { getBranchPromptForFunction } from "./branching.js?v=20260606a";
+import { generatePromptSet } from "./generator.js?v=20260606a";
 import {
   buildReflectionSummary,
   mergeReflectionSummary,
-} from "./mapping.js?v=20260530b";
-import { normalizeIntake } from "./schema.js?v=20260530b";
+} from "./mapping.js?v=20260606a";
+import { normalizeIntake } from "./schema.js?v=20260606a";
 import {
   clearStoredSession,
   getStorage,
-} from "./store.js?v=20260530b";
+} from "./store.js?v=20260606a";
 
-const BUILD_ID = "20260530b";
+const BUILD_ID = "20260606a";
 const appEl = document.getElementById("app");
 const storage = getStorage();
 clearStoredSession(storage);
